@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Bank Data</title>
+    <style>
+        /* body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            animation: fadeIn 1s ease-in-out;
+        } */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #99b7d5;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            color: black;
+            /* text-shadow: 0 0 10px rgba(255, 221, 87, 0.8); */
+            animation: popEffect 1s ease-in-out infinite alternate;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(34, 80, 55, 0.5);
+            overflow: hidden;
+            animation: fadeInTable 1s ease-in-out forwards;
+        }
+
+        th, td {
+            border: 1px solid #ffdd57;
+            padding: 12px;
+            text-align: center;
+            color: white;
+        }
+
+        th {
+            background-color: #ffdd57;
+            color: black;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 221, 87, 0.2);
+            transform: scale(1.02);
+            transition: all 0.3s ease-in-out;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #34495e;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #566573;
+            padding: 12px;
+            text-align: center;
+            color: white;
+        }
+
+        th {
+            background-color: #1abc9c;
+            color: black;
+            font-weight: bold;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(26, 188, 156, 0.2);
+            transform: scale(1.02);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .refresh-btn {
+            background: #13b863;
+            color: black;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 6px rgba(26, 188, 156, 0.2);
+        }
+
+        .refresh-btn:hover {
+            background: rgba(26, 188, 156, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInTable {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes popEffect {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <br><br><br>
+    <h1><b><u>Receivers Near You</u></b></h1><br><br>
+
+    
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>USER_ID</th>
+                <th>NAME</th>
+                <th>LATITUDE</th>
+                <th>LONGITUDE</th>
+                <th>DISTANCE</th>
+                <th>Distance (Meters)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+    <br>
+    <button class="refresh-btn" onclick="fetchData()">Refresh Data</button>
+
+    <script>
+        async function fetchData() {
+            try {
+                console.log("Fetching data...");
+                const response = await fetch('http://localhost:3000/api/foodbank');
+                const data = await response.json();
+                
+                console.log("Data received:", data);
+
+                const tableBody = document.querySelector("#data-table tbody");
+                tableBody.innerHTML = "";
+                
+                data.forEach(row => {
+                    const tr = document.createElement("tr");
+                    
+                    row.forEach(cell => {
+                        const td = document.createElement("td");
+                        td.textContent = cell !== null ? cell : "N/A";
+                        tr.appendChild(td);
+                    });
+
+                    tableBody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                document.body.innerHTML += "<p style='color:red;'>Failed to load data</p>";
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>

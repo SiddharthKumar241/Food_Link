@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Needly - Request Food Assistance</title>
+    <!-- AOS CSS (for scroll animations) -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Three.js for Background Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <link rel="stylesheet" href="Receiver.css">
+</head>
+
+<body>
+
+  <!-- Three.js Background Container -->
+  <div id="three-container"></div>
+
+  <!-- Needly Page Content -->
+  <div class="needly-page">
+    <h1 data-aos="fade-up" data-aos-duration="1000">Request Food Assistance</h1>
+
+    <!-- Category Selection for Food Needed -->
+    <div class="categories" data-aos="zoom-in-up" data-aos-duration="1000">
+      <h2>Select Category of Help Needed</h2>
+      <br><br><br>
+      <div class="category">
+        <button class="need-category" id="food-btn">Food</button>
+        <button class="need-category" id="grains-btn">Clothing</button>
+        <button class="need-category" id="snacks-btn">Medicine</button>
+        <button class="need-category" id="others-btn">Others</button>
+      </div>
+      <br>
+    </div>
+    <br>
+
+    <!-- Section for Fetching Receiver's Location -->
+    <div class="request-section">
+      <h3 data-aos="fade-up" data-aos-duration="1500">Click below to raise a request</h3>
+      <button class="request-btn" id="get-location-btn">Raise Request</button><br>
+      <br>
+      <p id="status" style="color:wheat"></p> <!-- Display status of location fetch here -->
+    </div>
+
+    <!-- Display Donation Details -->
+    <div id="request-details" class="request-details">
+      <!-- Dynamically show request details based on selected category -->
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="footer">
+    <p>&copy; 2025 SARC LIMITED | All Rights Reserved.</p>
+    <p>We bridge the gap between those in need and those who wish to make a difference.</p>
+  </div>
+
+  <script>
+    // Initialize AOS for animations
+    AOS.init();
+
+    // Three.js Background Animation
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('three-container').appendChild(renderer.domElement);
+
+    // Create a rotating cube for background animation
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0xff6347, wireframe: true });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    camera.position.z = 5;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Event Listeners for Category Selection
+    document.getElementById('food-btn').addEventListener('click', () => {
+      showRequestDetails('Food');
+    });
+
+    document.getElementById('grains-btn').addEventListener('click', () => {
+      showRequestDetails('Clothes');
+    });
+
+    document.getElementById('snacks-btn').addEventListener('click', () => {
+      showRequestDetails('Medicine');
+    });
+
+    document.getElementById('others-btn').addEventListener('click', () => {
+      showRequestDetails('Others');
+    });
+
+    // Function to show request details based on selected category
+    function showRequestDetails(category) {
+      const requestDetailsDiv = document.getElementById('request-details');
+      requestDetailsDiv.style.display = 'block';
+      requestDetailsDiv.innerHTML = `<h3>You're requesting ${category}</h3><p>Click the button above to proceed with your request for ${category}.</p>`;
+    }
+
+    // Get the user's current location and show success message
+    function getLocation() {
+      const statusText = document.getElementById('status');
+      const requestDetailsDiv = document.getElementById('request-details');
+
+      if (navigator.geolocation) {
+        statusText.innerHTML = "Fetching your location...";
+        
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          // Hide the request details after clicking "Raise Request"
+          requestDetailsDiv.style.display = 'none';
+
+          // Display the location in the status paragraph along with success message
+          statusText.innerHTML = `Your location: Lat: ${latitude}, Lon: ${longitude}<br><br>
+                                  <strong style="color: lightgreen;">Your request has been raised successfully. You will be informed as soon as we find a donor.</strong>`;
+        }, function(error) {
+          statusText.innerHTML = "Unable to retrieve location.";
+        });
+      } else {
+        statusText.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+
+    // Event listener for the 'Raise Request' button
+    document.getElementById('get-location-btn').addEventListener('click', function() {
+      getLocation();
+    });
+  </script>
+
+</body>
+</html>

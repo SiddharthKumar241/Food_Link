@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Needly - Request Food Assistance</title>
+    
+    <!-- AOS CSS (for scroll animations) -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Three.js for Background Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            overflow: hidden;
+        }
+        
+        /* Three.js Background */
+        #three-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* Needly Page Styling */
+        .needly-page {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding-top: 100px;
+            color: #333;
+        }
+        
+        .needly-page h1 {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .categories h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin: 20px 0;
+        }
+        
+        .category {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .need-category {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            background-color: #ff6347;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .need-category:hover {
+            background-color: #e53e3e;
+            transform: scale(1.1);
+        }
+        
+        /* Request Section */
+        .request-section h3 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .request-btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        
+        .request-btn:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        /* Request Details Styling */
+        .request-details {
+            display: none;
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .request-details p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+  <!-- Three.js Background Container -->
+  <div id="three-container"></div>
+
+  <!-- Needly Page Content -->
+  <div class="needly-page">
+    <h1 data-aos="fade-up" data-aos-duration="1000">Request Food Assistance</h1>
+
+    <!-- Category Selection for Food Needed -->
+    <div class="categories" data-aos="zoom-in-up" data-aos-duration="1000">
+      <h2>Select Category of Food Needed</h2>
+      <div class="category">
+        <button class="need-category" id="food-btn">Fruits</button>
+        <button class="need-category" id="vegetables-btn">Vegetables</button>
+        <button class="need-category" id="grains-btn">Grains</button>
+        <button class="need-category" id="beverages-btn">Beverages</button>
+        <button class="need-category" id="snacks-btn">Snacks</button>
+        <button class="need-category" id="others-btn">Others</button>
+      </div>
+    </div>
+
+    <!-- Section for Fetching Receiver's Location -->
+    <div class="request-section">
+      <h3 data-aos="fade-up" data-aos-duration="1500">Provide Your Location</h3>
+      <button class="request-btn" id="get-location-btn">Get Location</button><br>
+      <br>
+      <p id="status" style="color:wheat"></p> <!-- Display status of location fetch here -->
+    </div>
+
+    <!-- Display Donation Details -->
+    <div id="request-details" class="request-details">
+      <!-- Dynamically show request details based on selected category -->
+    </div>
+  </div>
+
+  <script>
+    // Initialize AOS for animations
+    AOS.init();
+
+    // Three.js Background Animation
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('three-container').appendChild(renderer.domElement);
+
+    // Create a rotating cube for background animation
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0xff6347, wireframe: true });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    camera.position.z = 5;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Event Listeners for Category Selection
+    document.getElementById('food-btn').addEventListener('click', () => {
+      showRequestDetails('Fruits');
+    });
+
+    document.getElementById('vegetables-btn').addEventListener('click', () => {
+      showRequestDetails('Vegetables');
+    });
+
+    document.getElementById('grains-btn').addEventListener('click', () => {
+      showRequestDetails('Grains');
+    });
+
+    document.getElementById('beverages-btn').addEventListener('click', () => {
+      showRequestDetails('Beverages');
+    });
+
+    document.getElementById('snacks-btn').addEventListener('click', () => {
+      showRequestDetails('Snacks');
+    });
+
+    document.getElementById('others-btn').addEventListener('click', () => {
+      showRequestDetails('Others');
+    });
+
+    // Function to show request details based on selected category
+    function showRequestDetails(category) {
+      const requestDetailsDiv = document.getElementById('request-details');
+      requestDetailsDiv.style.display = 'block';
+      requestDetailsDiv.innerHTML = <h3>You're requesting ${category}</h3><p>Fill out the form below to proceed with your request for ${category}.</p>;
+    }
+
+    // Get the user's current location
+    function getLocation() {
+      const statusText = document.getElementById('status');
+      if (navigator.geolocation) {
+        statusText.innerHTML = "Fetching your location...";
+        
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          // Display the location in the status paragraph
+          statusText.innerHTML = Your location: Lat: ${latitude}, Lon: ${longitude};
+        }, function(error) {
+          statusText.innerHTML = "Unable to retrieve location.";
+        });
+      } else {
+        statusText.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+
+    // Event listener for the 'Get Location' button
+    document.getElementById('get-location-btn').addEventListener('click', function() {
+      getLocation();
+    });
+  </script>
+</body>
+</html>
