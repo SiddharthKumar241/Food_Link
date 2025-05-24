@@ -6,7 +6,6 @@ const { insertLocation } = require('./db');
 const app = express();
 app.use(bodyParser.json());
 
-// Serve static files (index.html and script.js)
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/store-location', async (req, res) => {
@@ -18,7 +17,6 @@ app.post('/store-location', async (req, res) => {
     res.json({ message: "Location stored successfully" });
 });
 
-// Serve index.html on root route
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
