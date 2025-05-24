@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const cors = require('cors'); // Import CORS
+const cors = require('cors'); 
 
 const { fetchFoodBankData } = require('./db'); //
 
@@ -8,7 +8,6 @@ const app = express();
 const PORT = 3000;
 app.use(cors());
 
-// Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/foodbank', async (req, res) => {
