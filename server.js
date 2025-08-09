@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const { connectDB, insertLocation, findNearby } = require('../Food_Link/models/db.js');
+const { connectDB, insertLocation, findNearby } = require('./models/db.js')
 
 const app = express();
 app.use(bodyParser.json());
@@ -62,3 +62,4 @@ app.get('/results', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
+
