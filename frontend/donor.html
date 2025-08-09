@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donor - Food Donation Service</title>
+  
+  <!-- AOS CSS (for scroll animations) -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Three.js for Background Animation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+</head>
+<body>
+
+  <!-- Three.js Background Container -->
+  <div id="three-container"></div>
+
+  <!-- Donor Page Content -->
+  <div class="donor-page">
+    <h1 data-aos="fade-up" data-aos-duration="1000">Donate to Those in Need</h1>
+
+    <div class="categories" data-aos="zoom-in-up" data-aos-duration="1000">
+      <h2>Select Category to Donate</h2><br>
+      <div class="category">
+        <button class="donation-category" id="food-btn">Food</button>
+        <button class="donation-category" id="clothing-btn">Clothing</button>
+        <button class="donation-category" id="medicine-btn">Medicine</button>
+        <button class="donation-category" id="others-btn">Others</button>
+      </div><br><br>
+    </div>
+
+    <div class="search-section">
+      <h3 data-aos="fade-up" data-aos-duration="1500">Find Needy People Near You</h3>
+      <a href=""></a>
+      <button class="search-btn" id="search-btn"><a style="text-decoration: none;color: white;"
+         href="./Receiver.html">Search</a></button>
+    </div>
+
+    <div id="donation-details" class="donation-details">
+      <!-- Dynamically show donation details based on selected category -->
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="footer">
+    <p>&copy; 2025 Siddharth Kumar| All Rights Reserved.</p>
+    <p>We bridge the gap between those in need and those who wish to make a difference.</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Missing Link in Food Chain</title>
+  <link rel="stylesheet" href="rajo.css">
+
+  <style>
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .container h1,
+    .container .buttons {
+      position: relative;
+      z-index: 1;
+    }
+
+    .bold {
+      opacity: 1;
+    }
+
+    .main_box {
+      background-image: url('logo.jpg');
+      background-size: cover;
+      height: 100vh;
+      width: 100vw;
+      opacity: 0.8;
+    }
+
+    .footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      font-size: 1em;
+      opacity: 0.7;
+    }
+
+    .footer p {
+      margin: 5px 0;
+    }
+
+    .footer a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const receiverBtn = document.getElementById('receiver-btn');
+    if (!receiverBtn) {
+      console.error("Receiver button with id 'receiver-btn' not found!");
+      return;
+    }
+
+    receiverBtn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert("Geolocation not supported by your browser.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const latitude = pos.coords.latitude;
+        const longitude = pos.coords.longitude;
+
+        // Replace these with actual user info or get from form/login
+        const userId = "user123";
+        const name = "Receiver Name";
+        const role = "receiver";
+
+        try {
+          const response = await fetch('/store-location', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, name, latitude, longitude, role })
+          });
+
+          const data = await response.json();
+          if (response.ok) {
+            // Redirect to results page with lat/lon as query params
+            window.location.href = `/results?lat=${latitude}&lon=${longitude}`;
+          } else {
+            alert("Error: " + data.error);
+          }
+        } catch (err) {
+          alert("Failed to store location: " + err.message);
+        }
+      }, (err) => {
+        alert("Error fetching location: " + err.message);
+      });
+    });
+  });
+</script>
+
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="logo">Food Donation Platform</div>
+    <button class="logup-btn" onclick="openPopup()">Logup</button>
+  </div>
+
+  <div class="background-animation"></div>
+  <div class="main_box">
+    <div class="bold">
+      <div class="container">
+        <br><br>
+        <h1 class="title">The Missing Link in Food Chain</h1><br>
+        <div class="buttons">
+          <a href="./donor.html" class="btn donor-btn">Donor</a>
+          <a id="receiver-btn" class="btn receiver-btn" href="./Receiver.html">Receiver</a>
+        </div><br><br>
+      </div>
+      <div class="popup-container" id="logupPopup">
+        <span class="close-btn" onclick="closePopup()">×</span>
+        <h2>Logup</h2>
+        <form id="logupForm">
+          <input type="text" id="name" placeholder="Name" required>
+          <input type="email" id="email" placeholder="Email" required>
+          <input type="text" id="username" placeholder="Username" required>
+          <input type="password" id="password" placeholder="Password" required>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      <div class="donation-options">
+        <div class="donation-box">
+          <h3>Give Today</h3>
+          <p>10₹ can help provide 10 meals!</p>
+          <button>DONATE NOW</button>
+        </div>
+        <div class="donation-box">
+          <h3>Give Monthly</h3>
+          <p>Join our Hunger Council with a monthly gift.</p>
+          <button>DONATE NOW</button>
+        </div>
+        <div class="donation-box">
+          <h3>Fundraise</h3>
+          <p>Start a fundraiser and inspire others to give.</p>
+          <button>LEARN MORE</button>
+        </div>
+        <div class="donation-box">
+          <h3>Volunteer</h3>
+          <p>Give your time and serve your community.</p>
+          <button>GET STARTED</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="footer">
+    <p>&copy; 2025 SARC LIMITED | All Rights Reserved.</p>
+    <p>We bridge the gap between those in need and those who wish to make a difference.</p>
+  </div>
+
+  <script>
+    function openPopup() {
+      document.getElementById("logupPopup").classList.add("active");
+    }
+
+    function closePopup() {
+      document.getElementById("logupPopup").classList.remove("active");
+    }
+
+    document.getElementById("logupForm")?.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, username, password })
+      }).then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          closePopup();
+        });
+    });
+
+    function createShapes() {
+      const shapes = ['circle', 'square', 'triangle', 'pentagon', 'hexagon', 'star'];
+      const animationContainer = document.querySelector('.background-animation');
+
+      for (let i = 0; i < 15; i++) {
+        let shapeDiv = document.createElement('div');
+        let shapeType = shapes[Math.floor(Math.random() * shapes.length)];
+        shapeDiv.classList.add('shape', shapeType);
+        shapeDiv.style.top = Math.random() * 100 + 'vh';
+        shapeDiv.style.left = Math.random() * 100 + 'vw';
+        shapeDiv.style.animationDuration = (5 + Math.random() * 5) + 's';
+        shapeDiv.style.setProperty('--x', (Math.random() * 2 - 1).toFixed(2));
+        shapeDiv.style.setProperty('--y', (Math.random() * 2 - 1).toFixed(2));
+        animationContainer.appendChild(shapeDiv);
+      }
+    }
+
+    createShapes();
+  </script>  
+
+</body>
+
+</html>
