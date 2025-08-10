@@ -63,60 +63,100 @@
       text-decoration: none;
       font-weight: bold;
     }
-  </style>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const receiverBtn = document.getElementById('receiver-btn');
-    if (!receiverBtn) {
-      console.error("Receiver button with id 'receiver-btn' not found!");
-      return;
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: transparent;
+      color: black;
+      font-weight: 600;
     }
 
-    receiverBtn.addEventListener('click', () => {
-      if (!navigator.geolocation) {
-        alert("Geolocation not supported by your browser.");
+    .navbar .logo {
+      font-size: 1.3rem;
+    }
+
+    .navbar .button-group {
+      display: flex;
+    }
+
+    .logup-btn {
+      background: white;
+      border: 2px solid black;
+      color: black;
+      padding: 6px 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .logup-btn:hover {
+      background: black;
+      color: white;
+    }
+
+    .button-group {
+      display: flex;
+      margin:0px;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const receiverBtn = document.getElementById('receiver-btn');
+      if (!receiverBtn) {
+        console.error("Receiver button with id 'receiver-btn' not found!");
         return;
       }
 
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const latitude = pos.coords.latitude;
-        const longitude = pos.coords.longitude;
-
-        // Replace these with actual user info or get from form/login
-        const userId = "user123";
-        const name = "Receiver Name";
-        const role = "receiver";
-
-        try {
-          const response = await fetch('/store-location', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, name, latitude, longitude, role })
-          });
-
-          const data = await response.json();
-          if (response.ok) {
-            // Redirect to results page with lat/lon as query params
-            window.location.href = `/results?lat=${latitude}&lon=${longitude}`;
-          } else {
-            alert("Error: " + data.error);
-          }
-        } catch (err) {
-          alert("Failed to store location: " + err.message);
+      receiverBtn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+          alert("Geolocation not supported by your browser.");
+          return;
         }
-      }, (err) => {
-        alert("Error fetching location: " + err.message);
+
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+          const latitude = pos.coords.latitude;
+          const longitude = pos.coords.longitude;
+
+          const userId = "user123";
+          const name = "Receiver Name";
+          const role = "receiver";
+
+          try {
+            const response = await fetch('/store-location', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId, name, latitude, longitude, role })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+              window.location.href = `/results?lat=${latitude}&lon=${longitude}`;
+            } else {
+              alert("Error: " + data.error);
+            }
+          } catch (err) {
+            alert("Failed to store location: " + err.message);
+          }
+        }, (err) => {
+          alert("Error fetching location: " + err.message);
+        });
       });
     });
-  });
-</script>
+  </script>
 
 </head>
 
 <body>
   <div class="navbar">
     <div class="logo">Food Donation Platform</div>
-    <button class="logup-btn" onclick="openPopup()">Logup</button>
+    <div class="button-group">
+      <button class="logup-btn" onclick="openPopup()">Logup</button>
+      <button class="logup-btn" onclick="window.location.href='https://www.siddharthkumar.tech/'">Developer</button>
+    </div>
   </div>
 
   <div class="background-animation"></div>
@@ -166,7 +206,6 @@
     </div>
   </div>
 
-  <!-- Footer Section -->
   <div class="footer">
     <p>&copy; 2025 SARC LIMITED | All Rights Reserved.</p>
     <p>We bridge the gap between those in need and those who wish to make a difference.</p>
@@ -218,7 +257,7 @@
     }
 
     createShapes();
-  </script>  
+  </script>
 
 </body>
 
