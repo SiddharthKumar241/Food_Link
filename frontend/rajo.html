@@ -1,168 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Missing Link in Food Chain</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="rajo.css">
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const receiverBtn = document.getElementById('receiver-btn');
-      if (!receiverBtn) {
-        console.error("Receiver button with id 'receiver-btn' not found!");
-        return;
-      }
+  <!-- <style>
+    /* Base page styling */
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(120deg, #fbc2eb, #a6c1ee);
+  overflow-x: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+  min-height: 100vh;
+}
 
-      receiverBtn.addEventListener('click', () => {
-        if (!navigator.geolocation) {
-          alert("Geolocation not supported by your browser.");
-          return;
-        }
+/* Floating glowing shapes */
+.background-animation .shape {
+  position: absolute;
+  opacity: 0.35;
+  filter: blur(5px) drop-shadow(0 0 10px rgba(255,255,255,0.6));
+}
 
-        navigator.geolocation.getCurrentPosition(async (pos) => {
-          const latitude = pos.coords.latitude;
-          const longitude = pos.coords.longitude;
+/* Shape sizes */
+.shape.small {
+  width: 20px;
+  height: 20px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+  animation: float1 6s infinite ease-in-out;
+}
 
-          const userId = "user123";
-          const name = "Receiver Name";
-          const role = "receiver";
+.shape.medium {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  animation: float2 9s infinite ease-in-out;
+}
 
-          try {
-            const response = await fetch('/store-location', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ userId, name, latitude, longitude, role })
-            });
+.shape.large {
+  width: 60px;
+  height: 60px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  animation: float3 12s infinite ease-in-out;
+}
 
-            const data = await response.json();
-            if (response.ok) {
-              window.location.href = `/results?lat=${latitude}&lon=${longitude}`;
-            } else {
-              alert("Error: " + data.error);
-            }
-          } catch (err) {
-            alert("Failed to store location: " + err.message);
-          }
-        }, (err) => {
-          alert("Error fetching location: " + err.message);
-        });
-      });
-    });
-  </script>
+/* Float animations */
+@keyframes float1 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(10px); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-35px) translateX(15px); }
+}
+@keyframes float3 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-50px) translateX(-20px); }
+}
 
+/* Navbar */
+.navbar {
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.navbar .logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+.navbar button {
+  border: none;
+  background: #ff758c;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.navbar button:hover {
+  background: #ff5a7a;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  color: #fff;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-top: 4rem;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.buttons .btn {
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
+  border: none;
+}
+.buttons .btn:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Donation Boxes */
+.donation-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: 3rem;
+}
+.donation-box {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 15px;
+  padding: 1.5rem;
+  color: #fff;
+  text-align: center;
+  transition: 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.donation-box:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.25);
+}
+.donation-box button {
+  margin-top: 1rem;
+  border: none;
+  padding: 0.5rem 1rem;
+  background: #6c63ff;
+  color: #fff;
+  border-radius: 25px;
+  transition: 0.3s;
+}
+.donation-box button:hover {
+  background: #5a52d8;
+}
+
+/* Footer */
+.footer {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+/* Modal */
+.modal-content {
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+}
+.btn-custom {
+    background: linear-gradient(45deg, #ff758c, #ff7eb3);
+    color: #fff;
+    border-radius: 25px;
+    padding: 0.5rem 1.2rem;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 10px rgba(255,118,140,0.4);
+    transition: 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-custom:hover {
+    transform: scale(0.97);
+    text-decoration: none;
+    color: #fff;
+  }
+
+  </style> -->
 </head>
-
 <body>
-  <div class="navbar">
-    <div class="logo">Food Donation Platform</div>
-    <div class="button-group">
-      <button class="logup-btn" onclick="openPopup()">Logup</button>
-      <button class="logup-btn" onclick="window.location.href='https://www.siddharthkumar.tech/'">Developer</button>
-    </div>
-  </div>
 
+  <!-- Background Shapes -->
   <div class="background-animation"></div>
-  <div class="main_box">
-    <div class="bold">
-      <div class="container">
-        <br><br>
-        <h1 class="title">The Missing Link in Food Chain</h1><br>
-        <div class="buttons">
-          <a href="./donor.html" class="btn donor-btn">Donor</a>
-          <a id="receiver-btn" class="btn receiver-btn" href="./Receiver.html">Receiver</a>
-        </div><br><br>
-      </div>
-      <div class="popup-container" id="logupPopup">
-        <span class="close-btn" onclick="closePopup()">×</span>
-        <h2>Logup</h2>
-        <form id="logupForm">
-          <input type="text" id="name" placeholder="Name" required>
-          <input type="email" id="email" placeholder="Email" required>
-          <input type="text" id="username" placeholder="Username" required>
-          <input type="password" id="password" placeholder="Password" required>
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-      <div class="donation-options">
-        <div class="donation-box">
-          <h3>Give Today</h3>
-          <p>10₹ can help provide 10 meals!</p>
-          <button>DONATE NOW</button>
-        </div>
-        <div class="donation-box">
-          <h3>Give Monthly</h3>
-          <p>Join our Hunger Council with a monthly gift.</p>
-          <button>DONATE NOW</button>
-        </div>
-        <div class="donation-box">
-          <h3>Fundraise</h3>
-          <p>Start a fundraiser and inspire others to give.</p>
-          <button>LEARN MORE</button>
-        </div>
-        <div class="donation-box">
-          <h3>Volunteer</h3>
-          <p>Give your time and serve your community.</p>
-          <button>GET STARTED</button>
-        </div>
-      </div>
+
+  <!-- Navbar -->
+<div class="navbar d-flex align-items-center justify-content-between px-3 py-2">
+  <div class="logo">Food Donation Platform</div>
+  <div>
+    <button data-bs-toggle="modal" data-bs-target="#logupModal" class="btn btn-custom me-2">Logup</button>
+    <a href="https://www.siddharthkumar.tech/" target="_blank" rel="noopener noreferrer" class="btn btn-custom">Developer</a>
+  </div>
+</div>
+
+  <!-- Title -->
+  <h1 class="title animate__animated animate__fadeInDown">The Missing Link in Food Chain</h1>
+
+  <!-- Main Buttons -->
+  <div class="buttons animate__animated animate__fadeInUp animate__delay-1s">
+    <a href="./donor.html" class="btn">Donor</a>
+    <button id="receiver-btn" class="btn">Receiver</button>
+  </div>
+
+  <!-- Donation Options -->
+  <div class="donation-options animate__animated animate__fadeInUp animate__delay-2s">
+    <div class="donation-box">
+      <h3>Give Today</h3>
+      <p>₹10 can help provide 10 meals!</p>
+      <button>DONATE NOW</button>
+    </div>
+    <div class="donation-box">
+      <h3>Give Monthly</h3>
+      <p>Join our Hunger Council with a monthly gift.</p>
+      <button>DONATE NOW</button>
+    </div>
+    <div class="donation-box">
+      <h3>Fundraise</h3>
+      <p>Start a fundraiser and inspire others to give.</p>
+      <button>LEARN MORE</button>
+    </div>
+    <div class="donation-box">
+      <h3>Volunteer</h3>
+      <p>Give your time and serve your community.</p>
+      <button>GET STARTED</button>
     </div>
   </div>
 
+  <!-- Footer -->
   <div class="footer">
     <p>&copy; 2025 SARC LIMITED | All Rights Reserved.</p>
     <p>We bridge the gap between those in need and those who wish to make a difference.</p>
   </div>
 
+  <!-- Logup Modal -->
+  <div class="modal fade" id="logupModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title">Logup</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="logupForm">
+          <div class="modal-body">
+            <input type="text" id="name" class="form-control mb-2" placeholder="Name" required>
+            <input type="email" id="email" class="form-control mb-2" placeholder="Email" required>
+            <input type="text" id="username" class="form-control mb-2" placeholder="Username" required>
+            <input type="password" id="password" class="form-control mb-2" placeholder="Password" required>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
-    function openPopup() {
-      document.getElementById("logupPopup").classList.add("active");
+    // Floating shapes
+    function createShapes() {
+      const shapes = ['circle', 'square', 'triangle'];
+      const container = document.querySelector('.background-animation');
+      for (let i = 0; i < 12; i++) {
+        const shape = document.createElement('div');
+        shape.classList.add('shape');
+        shape.style.top = Math.random() * 100 + 'vh';
+        shape.style.left = Math.random() * 100 + 'vw';
+        shape.style.width = shape.style.height = (20 + Math.random() * 50) + 'px';
+        shape.style.background = `rgba(255,255,255,${Math.random() * 0.3})`;
+        container.appendChild(shape);
+      }
     }
+    createShapes();
 
-    function closePopup() {
-      document.getElementById("logupPopup").classList.remove("active");
-    }
+    // Geolocation
+    document.getElementById('receiver-btn').addEventListener('click', () => {
+      if (!navigator.geolocation) return alert("Geolocation not supported.");
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const userId = "user123", name = "Receiver Name", role = "receiver";
+        try {
+          const res = await fetch('/store-location', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, name, latitude, longitude, role })
+          });
+          const data = await res.json();
+          if (res.ok) window.location.href = `/results?lat=${latitude}&lon=${longitude}`;
+          else alert("Error: " + data.error);
+        } catch (err) {
+          alert("Failed: " + err.message);
+        }
+      }, (err) => alert("Error: " + err.message));
+    });
 
-    document.getElementById("logupForm")?.addEventListener("submit", function (event) {
-      event.preventDefault();
-
+    // Form submit
+    document.getElementById('logupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
       const name = document.getElementById("name").value;
       const email = document.getElementById("email").value;
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
-
-      fetch('/register', {
+      const res = await fetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, username, password })
-      }).then(response => response.json())
-        .then(data => {
-          alert(data.message);
-          closePopup();
-        });
+      });
+      const data = await res.json();
+      alert(data.message);
+      bootstrap.Modal.getInstance(document.getElementById('logupModal')).hide();
     });
-
-    function createShapes() {
-      const shapes = ['circle', 'square', 'triangle', 'pentagon', 'hexagon', 'star'];
-      const animationContainer = document.querySelector('.background-animation');
-
-      for (let i = 0; i < 15; i++) {
-        let shapeDiv = document.createElement('div');
-        let shapeType = shapes[Math.floor(Math.random() * shapes.length)];
-        shapeDiv.classList.add('shape', shapeType);
-        shapeDiv.style.top = Math.random() * 100 + 'vh';
-        shapeDiv.style.left = Math.random() * 100 + 'vw';
-        shapeDiv.style.animationDuration = (5 + Math.random() * 5) + 's';
-        shapeDiv.style.setProperty('--x', (Math.random() * 2 - 1).toFixed(2));
-        shapeDiv.style.setProperty('--y', (Math.random() * 2 - 1).toFixed(2));
-        animationContainer.appendChild(shapeDiv);
-      }
-    }
-
-    createShapes();
   </script>
-
 </body>
-
 </html>
-
